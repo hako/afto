@@ -2,7 +2,7 @@ language: go
 
 script: make test
 
-install:
+before_install:
    - go get github.com/gorilla/handler
    - go get github.com/docopt/docopt-go
    - go get github.com/fatih/color
