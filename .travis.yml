@@ -1,5 +1,7 @@
 language: go
 
+script: make test
+
 go:
   - 1.4
   - 1.5
