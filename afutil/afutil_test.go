@@ -38,7 +38,6 @@ func TestDpkgCommandExists(t *testing.T) {
 	if err != nil {
 		t.Errorf("CheckDPKG() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
 	}
-	tearDown()
 }
 
 // Testing .deb file regex
@@ -66,6 +65,29 @@ func TestIsDeb(t *testing.T) {
 	}
 }
 
+// Testing if the host user has the bzip2 command.
+func TestBzip2Exists(t *testing.T) {
+	err := CheckBzip2()
+	if err != nil {
+		t.Errorf("CheckBzip2() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
+	}
+}
+
+// Testing bzip2 packages using exec.
+func TestBzipPackages(t *testing.T) {
+	os.Chdir("../test_data/packages/")
+	err := BzipPackages()
+	if err != nil {
+		t.Errorf("BzipPackages() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
+	}
+	_, direrr := os.Open("Packages.bz2")
+	if direrr != nil {
+		t.Errorf("BzipPackages() failed test. Packages.bz2 was not found.")
+	}
+	tearDown()
+}
+
 func tearDown() {
 	os.Remove("tests")
+	os.Remove("Packages.bz2")
 }

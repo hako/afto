@@ -139,9 +139,15 @@ func newRepo(name string) {
 		log.Fatalln(direrr)
 	}
 	log.Println("generated Packages file.")
+	// Execute bzip command.
+	bzerr := afutil.BzipPackages()
+	if bzerr != nil {
+		log.Fatalln(bzerr)
+	}
+	log.Println("bzipped Packages file.")
 }
 
-// executeDpkgScript executes a commandline script which makes
+// executeDpkgScript executes a commandline script which creates a 'Packages' file.
 func executeDpkgScript() error {
 	cwd, err := os.Getwd()
 	if err != nil {
@@ -157,7 +163,7 @@ func executeDpkgScript() error {
 	if txterr != nil {
 		return txterr
 	}
-	// Run dpkg-scanpackages -m . /dev/null >Packages and save the output.
+	// Run dpkg-scanpackages -m . /dev/null > Packages and save the output.
 	packages, cmderr := exec.Command("dpkg-scanpackages", "-m", ".", "/dev/null").Output()
 	if cmderr != nil {
 		return cmderr

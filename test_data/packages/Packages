@@ -1,0 +1,16 @@
+Package: com.yourcompany.tweakexample
+Version: 0.0.1-2
+Architecture: iphoneos-arm
+Maintainer: foo
+Installed-Size: 88
+Depends: mobilesubstrate
+Filename: .//com.yourcompany.tweakexample_0.0.1-2_iphoneos-arm.deb
+Size: 2166
+MD5sum: b360935902c4617dfe14d489e8e52e20
+SHA1: 58fbdda814019ef5298f526633628c4703759452
+SHA256: 0c781e30e138b8b0e1e7e0a54ebf599c5e95819ad61e29991e8f308b7eb9e90e
+Section: Tweaks
+Description: An awesome MobileSubstrate tweak!
+Author: foo
+Name: TweakExample
+

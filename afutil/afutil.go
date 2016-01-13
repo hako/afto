@@ -47,6 +47,26 @@ func CheckDPKG() error {
 	return nil
 }
 
+// CheckBzip2 checks the host system has the bzip2 command installed. (Sometimes this happens.)
+func CheckBzip2() error {
+	_, err := exec.LookPath("bzip2")
+	if err != nil {
+		return errors.New("unable to find required command 'bzip2'")
+	}
+	return nil
+}
+
+// BzipPackages compresses the 'Packages' file Pacakges.bz2.
+// Note: The stlib package "compress/bzip2" does not support compression.
+func BzipPackages() error {
+	// Run bzip2 -kf Packages.
+	_, bzcmderr := exec.Command("bzip2", "-kf", "Packages").Output()
+	if bzcmderr != nil {
+		return bzcmderr
+	}
+	return nil
+}
+
 // CheckDeb checks if the user has deb files ready to go to the repo.
 func CheckDeb() ([]string, error) {
 	cwdir, err := os.Getwd()
