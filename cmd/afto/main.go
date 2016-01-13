@@ -171,6 +171,7 @@ func executeDpkgScript() error {
 	if werr != nil {
 		return werr
 	}
+	defer file.Close()
 	// Remove assets.
 	for _, asset := range AssetNames() {
 		os.Remove(asset)
