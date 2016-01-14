@@ -13,6 +13,7 @@ import (
 	"github.com/fatih/color"
 	"github.com/gorilla/handlers"
 	"github.com/hako/afto/afutil"
+	//"github.com/hako/afto/release"
 	//"github.com/hako/afto/control"
 )
 
@@ -110,10 +111,13 @@ func walkRepos() {
 
 }
 
+// A Release file is recommended for hosting a repo.
+func createRelease() {
+
+}
+
 // newRepo generates a new cydia compatible repo.
 func newRepo(name string) {
-	log.Println("generating repo: \"" + name + "\"")
-	os.Mkdir(name, 0755)
 	// Check for the dpkg command.
 	err := afutil.CheckDPKG()
 	if err != nil {
@@ -133,6 +137,8 @@ func newRepo(name string) {
 	} else {
 		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
 	}
+	log.Println("generating repo: \"" + name + "\"")
+	os.Mkdir(name, 0755)
 	// Execute dpkg script.
 	direrr := executeDpkgScript()
 	if direrr != nil {

@@ -23,8 +23,8 @@ type Format struct {
 	section     string
 }
 
-// newFormat() creates a new tweak control parser format.
-func newFormat() *Format {
+// NewFormat creates a new Format struct for the control file.
+func NewFormat() *Format {
 	return &Format{}
 }
 
