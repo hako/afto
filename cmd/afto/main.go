@@ -13,12 +13,11 @@ import (
 	"github.com/fatih/color"
 	"github.com/gorilla/handlers"
 	"github.com/hako/afto/afutil"
-	//"github.com/hako/afto/release"
 	//"github.com/hako/afto/control"
 )
 
 var (
-	defaultport = "2468"
+	defaultPort = "2468"
 	version     = "0.1"
 	repoPath    = ""
 )
@@ -57,7 +56,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// New command function [not implemented]
+	// New command function.
 	if opts["new"] == true {
 		name := opts["<name>"].(string)
 		newRepo(name)
@@ -85,7 +84,7 @@ func main() {
 	// afto watches, listens and takes action. (afto listens on 0.0.0.0:[port])
 	color.Cyan("afto (αυτο) v" + version + " - the cydia repo generator/manager.")
 	color.Cyan("(c) 2016 Wesley Hill (@hako/@hakobyte)")
-	fmt.Println("afto is watching & listening for connections on port " + defaultport)
+	fmt.Println("afto is watching & listening for connections on port " + defaultPort)
 
 	// Add middleware.
 	mx := http.FileServer(http.Dir(repoPath))
@@ -95,7 +94,7 @@ func main() {
 
 	// Spin up a goroutine and serve the repo.
 	go func() {
-		err := http.ListenAndServe(":"+defaultport, loggingHandler)
+		err := http.ListenAndServe(":"+defaultPort, loggingHandler)
 		if err != nil {
 			fmt.Println("afto: error " + err.Error())
 			os.Exit(1)
@@ -108,11 +107,6 @@ func main() {
 // walkRepo checks multiple directories to see if they have the required files of
 // a cydia repo. (running afto on its own triggers this.)
 func walkRepos() {
-
-}
-
-// A Release file is recommended for hosting a repo.
-func createRelease() {
 
 }
 
@@ -151,6 +145,15 @@ func newRepo(name string) {
 		log.Fatalln(bzerr)
 	}
 	log.Println("bzipped Packages file.")
+	// Create Release file.
+	rfile := afutil.ReleaseFile("Example", "Example Repo", "A default repo", "afto", "stable")
+	rf, rferr := os.Create(name + "Release")
+	if rferr != nil {
+		log.Fatalln(rferr)
+	}
+	rf.WriteString(rfile)
+	log.Println("created Release file.")
+
 }
 
 // executeDpkgScript executes a commandline script which creates a 'Packages' file.

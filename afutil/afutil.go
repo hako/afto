@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"runtime"
 	"strconv"
+
+	"github.com/hako/afto/release"
 )
 
 // ParseDir checks to see if a directory has the required files for a cydia repo.
@@ -96,6 +98,18 @@ func CheckDeb() ([]string, error) {
 func IsDeb(filename string) bool {
 	re := regexp.MustCompile(`(\.deb)`)
 	return re.MatchString(filename)
+}
+
+// ReleaseFile generates a release file based on origin, label, desc codename and suite.
+// It is recommended to generate this file for hosting a repo.
+func ReleaseFile(origin string, label string, desc string, codename string, suite string) string {
+	r := release.NewRelease()
+	r.SetOrigin(origin)
+	r.SetLabel(label)
+	r.SetDescription(desc)
+	r.SetCodename(codename)
+	r.SetSuite(suite)
+	return r.Generate()
 }
 
 // DetectPlatform returns what host system the user is running.
