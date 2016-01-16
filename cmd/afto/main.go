@@ -26,6 +26,7 @@ var usage = `afto ` + version + `
 
 Usage:
   afto new <name> 
+  afto update <name>
   afto [-c <file> | --control <file>]
   afto [-d <dir> | --dir <dir>]
   afto [-p <port> | --port <port>]
@@ -115,7 +116,6 @@ func main() {
 func walkRepos() {
 
 }
-
 // newRepo generates a new cydia compatible repo.
 func (af *AftoRepo) newRepo() {
 	// Check for the dpkg command.
@@ -167,33 +167,89 @@ func (af *AftoRepo) newRepo() {
 	}
 }
 
-// executeDpkgScript executes a commandline script which creates a 'Packages' file.
-func (af *AftoRepo) executeDpkgScript() error {
+// updateRepo updates all the packages that exist in the current repo.
+func (af *AftoRepo) updateRepo(){
+	// Check for the dpkg command.
+	err := afutil.CheckDPKG()
+	if err != nil {
+		log.Println(err)
+		// Now check for compatible platform.
+		message, err := afutil.DetectPlatform()
+		if err != nil {
+			log.Fatalln(err)
+		}
+		fmt.Println(message)
+	}
+	// Check for deb files.
+	log.Println("checking for deb files...")
+	debs, err := afutil.CheckDeb()
+	if err != nil {
+		log.Fatalln(err)
+	} else {
+		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
+	}
+	log.Println("updating repo: \"" + af.Name + "\"")
+	// Execute dpkg script.
+	direrr := af.executeDpkgScript()
+	if direrr != nil {
+		log.Fatalln(direrr)
+	}
+	log.Println("generated Packages file.")
+	// Execute bzip command.
+	bzerr := afutil.BzipPackages()
+	if bzerr != nil {
+		log.Fatalln(bzerr)
+	}
+	log.Println("bzipped Packages file.")
+	// Create Release file.
+	rfile := afutil.ReleaseFile("Example", "Example Repo", "A default repo", "afto", "stable")
+	rf, rferr := os.Create(af.Name + "/Release")
+	if rferr != nil {
+		log.Fatalln(rferr)
+	}
+	rf.WriteString(rfile)
+	log.Println("created Release file.")
+}
+
+// runScript executes the dpkg scan packages command.
+func (af *AftoRepo) runScript() ([]byte,error){
 	cwd, err := os.Getwd()
 	if err != nil {
-		return err
+		return nil,err
 	}
 	// Restore required assets to current directory.
 	path, _ := filepath.Abs(cwd)
 	dataerr := RestoreAsset(path, ".dpkg-scanpackages")
 	if dataerr != nil {
-		return dataerr
+		return nil,dataerr
 	}
 	txterr := RestoreAsset(path, ".dpkg-gettext.pl")
 	if txterr != nil {
-		return txterr
+		return nil,txterr
 	}
 	// Run dpkg-scanpackages -m . /dev/null > Packages and save the output.
 	packages, cmderr := exec.Command("dpkg-scanpackages", "-m", ".", "/dev/null").Output()
 	if cmderr != nil {
-		return cmderr
+		return nil,cmderr
 	}
+	return packages,nil
+}
+
+// executeDpkgScript executes a commandline script which creates a 'Packages' file.
+func (af *AftoRepo) executeDpkgScript() error {
+
+	output, screrr := af.runScript()
+
+	if screrr != nil{
+		return screrr
+	}
+
 	file, err := os.Create("Packages")
 	if err != nil {
 		return err
 	}
 	// Write the Packages file.
-	_, werr := file.Write(packages)
+	_, werr := file.Write(output)
 	if werr != nil {
 		return werr
 	}
