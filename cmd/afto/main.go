@@ -69,6 +69,13 @@ func main() {
 		af.newRepo()
 		os.Exit(0)
 	}
+	// Afto update command
+	if opts["update"] == true{
+		name := opts["<name>"].(string)
+		af := &AftoRepo{Name: name}
+		af.updateRepo()
+		os.Exit(0)
+	}
 
 	var dir = opts["<dir>"].(string)
 
@@ -189,12 +196,17 @@ func (af *AftoRepo) updateRepo(){
 		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
 	}
 	log.Println("updating repo: \"" + af.Name + "\"")
-	// Execute dpkg script.
-	direrr := af.executeDpkgScript()
-	if direrr != nil {
-		log.Fatalln(direrr)
+	// Execute run script.
+	output, screrr := af.runScript()
+	if screrr != nil {
+		log.Fatalln(screrr)
 	}
 	log.Println("generated Packages file.")
+	log.Println("checking for updates")
+
+	pkgfile := string(output)
+	fmt.Println(pkgfile)
+
 	// Execute bzip command.
 	bzerr := afutil.BzipPackages()
 	if bzerr != nil {
