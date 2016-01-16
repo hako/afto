@@ -39,6 +39,11 @@ options:
 commands:
   new             Generate a new cydia repo.`
 
+// AftoRepo represents a cydia repo with a name.
+type AftoRepo struct {
+	Name string
+}
+
 func main() {
 	// Parse flags.
 	if len(os.Args) == 1 {
@@ -59,7 +64,8 @@ func main() {
 	// New command function.
 	if opts["new"] == true {
 		name := opts["<name>"].(string)
-		newRepo(name)
+		af := &AftoRepo{Name: name}
+		af.newRepo()
 		os.Exit(0)
 	}
 
@@ -111,7 +117,7 @@ func walkRepos() {
 }
 
 // newRepo generates a new cydia compatible repo.
-func newRepo(name string) {
+func (af *AftoRepo) newRepo() {
 	// Check for the dpkg command.
 	err := afutil.CheckDPKG()
 	if err != nil {
@@ -131,10 +137,10 @@ func newRepo(name string) {
 	} else {
 		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
 	}
-	log.Println("generating repo: \"" + name + "\"")
-	os.Mkdir(name, 0755)
+	log.Println("generating repo: \"" + af.Name + "\"")
+	os.Mkdir(af.Name, 0755)
 	// Execute dpkg script.
-	direrr := executeDpkgScript()
+	direrr := af.executeDpkgScript()
 	if direrr != nil {
 		log.Fatalln(direrr)
 	}
@@ -147,17 +153,22 @@ func newRepo(name string) {
 	log.Println("bzipped Packages file.")
 	// Create Release file.
 	rfile := afutil.ReleaseFile("Example", "Example Repo", "A default repo", "afto", "stable")
-	rf, rferr := os.Create(name + "Release")
+	rf, rferr := os.Create(af.Name + "/Release")
 	if rferr != nil {
 		log.Fatalln(rferr)
 	}
 	rf.WriteString(rfile)
 	log.Println("created Release file.")
-
+	// Move files to repo.
+	os.Rename("Packages", af.Name+"/Packages")
+	os.Rename("Packages.bz2", af.Name+"/Packages.bz2")
+	for _, deb := range debs {
+		os.Rename(deb, af.Name+"/"+deb)
+	}
 }
 
 // executeDpkgScript executes a commandline script which creates a 'Packages' file.
-func executeDpkgScript() error {
+func (af *AftoRepo) executeDpkgScript() error {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return err

@@ -19,14 +19,16 @@
 
 **v.0.1 | 10/01/15 -**:
 
-* [ ] **test**: add tests first.
+* [x] **test**: add tests first.
 * [x] **impl**: implement cli.
 * [x] **test**: check for index.html and required files.
 * [x] **impl**: add logging.
 * [x] **impl**: add control file option.
 * [x] **impl**: embed dpkg- scripts to script.go.
+* [x] **impl**: implement release file generator.
 * [ ] **impl**: basic server. (Not file server)
 * [ ] **impl**: provide basic control file parser.
+* [ ] **impl**: generate html file, cydia icon etc.
 * [ ] **impl**: afto should walk over generated repo. (./afto)
   * [x] **note**: It should check for dpkg-scanpackages.
 
