@@ -20,7 +20,7 @@ type Release struct {
 // NewRelease creates a new Release struct for a Release file with default values.
 func NewRelease() *Release {
 	return &Release{
-		suite:      "stable",
+		suite:      "beta",
 		arch:       "iphoneos-arm",
 		components: "main",
 	}
