@@ -16,6 +16,11 @@ afto is an automated command-line cydia repo generator/builder and hoster for Cy
 + Many more.
 
 ### install
+
+If you have Go installed you can install the project by using:
+`go get github.com/hako/afto`
+
+And you can install `afto` by using:
 `go get github.com/hako/afto/cmd/afto`
 
 Single binaries will be provided in the near future.
