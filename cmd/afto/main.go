@@ -174,6 +174,8 @@ func (af *AftoRepo) newRepo() {
 	}
 }
 
+// AFTODO: Implement update repo command here.
+
 // updateRepo updates all the packages that exist in the current repo.
 func (af *AftoRepo) updateRepo(){
 	// Check for the dpkg command.
@@ -220,7 +222,7 @@ func (af *AftoRepo) updateRepo(){
 		log.Fatalln(rferr)
 	}
 	rf.WriteString(rfile)
-	log.Println("created Release file.")
+	log.Println("Created Release file.")
 }
 
 // runScript executes the dpkg scan packages command.
