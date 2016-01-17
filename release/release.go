@@ -2,6 +2,8 @@
 package release
 
 import (
+	"crypto/md5"
+	"fmt"
 	"strconv"
 )
 
@@ -15,6 +17,14 @@ type Release struct {
 	arch        string
 	components  string
 	description string
+	signatures  []MD5Signature
+}
+
+// MD5Signature represents a signed repo Release file.
+type MD5Signature struct {
+	sum         string
+	size        int
+	packageName string
 }
 
 // NewRelease creates a new Release struct for a Release file with default values.
@@ -106,8 +116,25 @@ func (r *Release) SetDescription(desc string) {
 	r.description = desc
 }
 
+// AddPackageSignature appends an MD5 Signature of Packages & Packages.bz2 in the Release file.
+// It should be in the form of:
+// MD5Sum:
+//  <hash> <size in bytes> Packages
+//  <hash> <size in bytes> Packages.bz2
+func (r *Release) AddPackageSignature(pkgs []byte, pkgbz2 []byte) {
+	pkgsum := fmt.Sprintf("%x", md5.Sum(pkgs))
+	pkgbz2sum := fmt.Sprintf("%x", md5.Sum(pkgbz2))
+
+	pkgsig := MD5Signature{pkgsum, len(pkgs), "Packages"}
+	pkgbz2sig := MD5Signature{pkgbz2sum, len(pkgbz2), "Packages.bz2"}
+
+	r.signatures = []MD5Signature{pkgsig, pkgbz2sig}
+}
+
 // Generate creates a release file from the Release struct.
+// It appends a signature at the end of the release file.
 func (r Release) Generate() string {
+
 	var release = `Origin: ` + r.origin + `
 Label: ` + r.label + `
 Suite: ` + r.suite + `
@@ -116,6 +143,12 @@ Codename: ` + r.codename + `
 Architectures: ` + r.arch + `
 Components: ` + r.components + `
 Description: ` + r.description + `
+MD5Sum:
 `
+
+	for _, s := range r.signatures {
+		release += fmt.Sprintf(" %s %d %s\n", s.sum, s.size, s.packageName)
+	}
+
 	return release
 }

@@ -102,14 +102,26 @@ func IsDeb(filename string) bool {
 
 // ReleaseFile generates a release file based on origin, label, desc codename and suite.
 // It is recommended to generate this file for hosting a repo.
-func ReleaseFile(origin string, label string, desc string, codename string, suite string) string {
+func ReleaseFile(origin string, label string, desc string, codename string, suite string) (string, error) {
 	r := release.NewRelease()
 	r.SetOrigin(origin)
 	r.SetLabel(label)
 	r.SetDescription(desc)
 	r.SetCodename(codename)
 	r.SetSuite(suite)
-	return r.Generate()
+
+	// Get Packages and Packages.bz2
+	packages, err := ioutil.ReadFile("Packages")
+	if err != nil {
+		return "", err
+	}
+	packagesbz, err := ioutil.ReadFile("Packages.bz2")
+	if err != nil {
+		return "", err
+	}
+
+	r.AddPackageSignature(packages, packagesbz)
+	return r.Generate(), nil
 }
 
 // DetectPlatform returns what host system the user is running.
