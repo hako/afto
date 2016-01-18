@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	defaultPort = "2468"
-	version     = "0.1"
-	repoPath    = ""
+	port     = "2468"
+	version  = "0.1"
+	repoPath = ""
 )
 
 var usage = `afto ` + version + `
@@ -27,9 +27,8 @@ var usage = `afto ` + version + `
 Usage:
   afto new <name> 
   afto update <name>
+  afto [-d <dir> | --dir <dir>] [-p <port> | --port <port>]
   afto [-c <file> | --control <file>]
-  afto [-d <dir> | --dir <dir>]
-  afto [-p <port> | --port <port>]
 
 options:
   -c, --control  Specify control file to use.
@@ -61,6 +60,11 @@ func main() {
 	if (opts["-d"] != true && opts["--dir"] != true) && opts["new"] != true {
 		fmt.Println("afto: -d or --dir is required")
 		os.Exit(1)
+	}
+
+	if opts["-p"] == true || opts["--port"] == true {
+		argport := opts["<port>"].(string)
+		port = argport
 	}
 
 	// New command function.
@@ -99,7 +103,7 @@ func main() {
 	// afto watches, listens and takes action. (afto listens on 0.0.0.0:[port])
 	color.Cyan("afto (αυτο) v" + version + " - the cydia repo generator/manager.")
 	color.Cyan("(c) 2016 Wesley Hill (@hako/@hakobyte)")
-	fmt.Println("afto is watching & listening for connections on port " + defaultPort)
+	fmt.Println("afto is watching & listening for connections on port " + port)
 
 	// Add middleware.
 	mx := http.FileServer(http.Dir(repoPath))
@@ -109,7 +113,7 @@ func main() {
 
 	// Spin up a goroutine and serve the repo.
 	go func() {
-		err := http.ListenAndServe(":"+defaultPort, loggingHandler)
+		err := http.ListenAndServe(":"+port, loggingHandler)
 		if err != nil {
 			fmt.Println("afto: error " + err.Error())
 			os.Exit(1)
@@ -177,9 +181,27 @@ func (af *AftoRepo) newRepo() {
 	}
 	rf.WriteString(rfile)
 	log.Println("created Release file.")
+
+	// Restore the icons too.
+	cyiconerr := RestoreAsset(".", "CydiaIcon.png")
+	if cyiconerr != nil {
+		log.Fatalln(cyiconerr)
+	}
+	cyicon2err := RestoreAsset(".", "CydiaIcon@2x.png")
+	if cyicon2err != nil {
+		log.Fatalln(cyicon2err)
+	}
+	cyicon3err := RestoreAsset(".", "CydiaIcon@3x.png")
+	if cyicon3err != nil {
+		log.Fatalln(cyicon3err)
+	}
+
 	// Move files to repo.
 	os.Rename("Packages", af.Name+"/Packages")
 	os.Rename("Packages.bz2", af.Name+"/Packages.bz2")
+	os.Rename("CydiaIcon.png", af.Name+"/CydiaIcon.png")
+	os.Rename("CydiaIcon@2x.png", af.Name+"/CydiaIcon@2x.png")
+	os.Rename("CydiaIcon@3x.png", af.Name+"/CydiaIcon@3x.png")
 	for _, deb := range af.Debs {
 		os.Rename(deb, af.Name+"/"+deb)
 	}
@@ -262,7 +284,7 @@ func (af *AftoRepo) executeDpkgScript() error {
 		return werr
 	}
 	defer file.Close()
-	// Remove assets.
+	// Remove unwanted assets.
 	for _, asset := range AssetNames() {
 		os.Remove(asset)
 	}
