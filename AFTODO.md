@@ -26,10 +26,10 @@
 * [x] **impl**: add control file option.
 * [x] **impl**: embed dpkg- scripts to script.go.
 * [x] **impl**: implement release file generator.
-* [ ] **impl**: basic server. (Not file server)
 * [ ] **impl**: provide basic control file parser.
 * [ ] **impl**: generate html file, cydia icon etc.
 * [ ] **impl**: afto should walk over generated repo. (./afto)
+* [ ] **impl**: basic server. (Not file server)
   * [x] **note**: It should check for dpkg-scanpackages.
 
 **v.0.2**:
