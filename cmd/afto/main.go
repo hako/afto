@@ -13,7 +13,6 @@ import (
 	"github.com/fatih/color"
 	"github.com/gorilla/handlers"
 	"github.com/hako/afto/afutil"
-	//"github.com/hako/afto/control"
 )
 
 var (
@@ -156,7 +155,7 @@ func (af *AftoRepo) checkReqs() {
 		}
 		fmt.Println(message)
 	}
-	// Check for deb files.
+	// Check for deb files. De(b)pending on the command given.
 	log.Println("checking for deb files...")
 	if af.Cmd == "new" {
 		debs, err := afutil.CheckDeb()
@@ -249,10 +248,9 @@ func (af *AftoRepo) updateRepo() {
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println(len(af.Debs))
-	for _, deb := range af.Debs {
-		afutil.ParseDeb(deb)
-	}
+	// for _, deb := range af.Debs {
+	// 	debPath := path + "/" + deb
+	// }
 	// // Execute run script.
 	// _, screrr := af.runScript()
 	// if screrr != nil {

@@ -3,7 +3,6 @@ package afutil
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -12,6 +11,7 @@ import (
 	"runtime"
 	"strconv"
 
+	"github.com/hako/afto/deb"
 	"github.com/hako/afto/release"
 )
 
@@ -78,16 +78,20 @@ func GetRepo(dir string) (string, error) {
 	return finalPath, nil
 }
 
-// ParseDeb parses a deb file and lists all the fields in the deb file.
-// It uses the command dpkg --field *.deb to
-func ParseDeb(debName string) error {
+// ParseDeb parses a deb file and returns a *Format.
+func ParseDeb(debName string) (*deb.Control, error) {
 	// Run dpkg --field *.deb
-	fields, parseerr := exec.Command("dpkg", "-field", debName).Output()
+	fields, parseerr := exec.Command("dpkg", "-f", debName).Output()
 	if parseerr != nil {
-		return parseerr
+		return nil, parseerr
 	}
-	fmt.Println(fields)
-	return nil
+	c := deb.NewControl()
+	controlFile, errs := c.ParseString(string(fields))
+	if errs != nil {
+		return nil, errs
+	}
+
+	return controlFile, nil
 }
 
 // BzipPackages compresses the 'Packages' file Pacakges.bz2.
