@@ -64,6 +64,7 @@ commands:
 type AftoRepo struct {
 	Name string
 	Debs []string
+	Cmd  string
 }
 
 func main() {
@@ -78,7 +79,7 @@ func main() {
 	log.SetPrefix("afto: ")
 	log.SetFlags(2)
 
-	if (opts["-d"] != true && opts["--dir"] != true) && opts["new"] != true {
+	if (opts["-d"] != true && opts["--dir"] != true) && opts["new"] != true && opts["update"] != true {
 		fmt.Println("afto: -d or --dir is required")
 		os.Exit(1)
 	}
@@ -91,31 +92,23 @@ func main() {
 	// New command function.
 	if opts["new"] == true {
 		name := opts["<name>"].(string)
-		af := &AftoRepo{Name: name}
+		af := &AftoRepo{Name: name, Cmd: "new"}
 		af.newRepo()
 		os.Exit(0)
 	}
 	// Afto update command
 	if opts["update"] == true {
 		name := opts["<name>"].(string)
-		af := &AftoRepo{Name: name}
+		af := &AftoRepo{Name: name, Cmd: "update"}
 		af.updateRepo()
 		os.Exit(0)
 	}
 
 	var dir = opts["<dir>"].(string)
 
-	// Check if the input directory has the valid files for a cydia repo.
-	_, direrr := afutil.ParseDir(dir)
-	if direrr != nil {
-		fmt.Println("afto: " + direrr.Error())
-		os.Exit(1)
-	}
-
-	// Get the absolute path from dir.
-	finalPath, abserr := filepath.Abs(dir)
-	if abserr != nil {
-		fmt.Println("afto: " + abserr.Error())
+	finalPath, gtderr := afutil.GetRepo(dir)
+	if gtderr != nil {
+		log.Fatalln("afto: " + gtderr.Error())
 		os.Exit(1)
 	}
 
@@ -165,13 +158,22 @@ func (af *AftoRepo) checkReqs() {
 	}
 	// Check for deb files.
 	log.Println("checking for deb files...")
-	debs, err := afutil.CheckDeb()
-	if err != nil {
-		log.Fatalln(err)
-	} else {
+	if af.Cmd == "new" {
+		debs, err := afutil.CheckDeb()
+		if err != nil {
+			log.Fatalln(err)
+		}
 		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
+		af.Debs = debs
 	}
-	af.Debs = debs
+	if af.Cmd == "update" {
+		debs, err := afutil.CheckDebWithPath(af.Name)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		log.Println(strconv.Itoa(len(debs)) + " deb file(s) found.")
+		af.Debs = debs
+	}
 }
 
 // newRepo generates a new cydia compatible repo.
@@ -243,7 +245,14 @@ func (af *AftoRepo) newRepo() {
 func (af *AftoRepo) updateRepo() {
 	af.checkReqs()
 	log.Println("updating repo: \"" + af.Name + "\"")
-	afutil.ParseDir(af.Name)
+	_, err := afutil.GetRepo(af.Name)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(len(af.Debs))
+	for _, deb := range af.Debs {
+		afutil.ParseDeb(deb)
+	}
 	// // Execute run script.
 	// _, screrr := af.runScript()
 	// if screrr != nil {

@@ -3,9 +3,11 @@ package afutil
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"runtime"
 	"strconv"
@@ -58,6 +60,36 @@ func CheckBzip2() error {
 	return nil
 }
 
+// GetRepo checks if the string dir matches a valid repo in the current directory.
+// This can be from a name or a path.
+func GetRepo(dir string) (string, error) {
+	// Check if the input directory has the valid files for a cydia repo.
+	_, direrr := ParseDir(dir)
+	if direrr != nil {
+		return "", errors.New(direrr.Error())
+	}
+
+	// Get the absolute path from dir.
+	finalPath, abserr := filepath.Abs(dir)
+	if abserr != nil {
+		return "", errors.New(abserr.Error())
+	}
+
+	return finalPath, nil
+}
+
+// ParseDeb parses a deb file and lists all the fields in the deb file.
+// It uses the command dpkg --field *.deb to
+func ParseDeb(debName string) error {
+	// Run dpkg --field *.deb
+	fields, parseerr := exec.Command("dpkg", "-field", debName).Output()
+	if parseerr != nil {
+		return parseerr
+	}
+	fmt.Println(fields)
+	return nil
+}
+
 // BzipPackages compresses the 'Packages' file Pacakges.bz2.
 // Note: The stlib package "compress/bzip2" does not support compression.
 func BzipPackages() error {
@@ -77,6 +109,26 @@ func CheckDeb() ([]string, error) {
 	}
 
 	files, err := ioutil.ReadDir(cwdir)
+	if err != nil {
+		return nil, err
+	}
+
+	var deb []string
+	for _, file := range files {
+		if IsDeb(file.Name()) == true {
+			deb = append(deb, file.Name())
+		}
+	}
+	// Return error if ultimately no deb files are found.
+	if len(deb) == 0 {
+		return nil, errors.New("No .deb file(s) found. Unable to continue.")
+	}
+	return deb, nil
+}
+
+// CheckDebWithPath is like CheckDeb but a path is required.
+func CheckDebWithPath(path string) ([]string, error) {
+	files, err := ioutil.ReadDir(path)
 	if err != nil {
 		return nil, err
 	}
