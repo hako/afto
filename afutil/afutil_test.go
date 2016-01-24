@@ -85,6 +85,33 @@ func TestBzipPackages(t *testing.T) {
 		t.Errorf("BzipPackages() failed test. Packages.bz2 was not found.")
 	}
 	tearDown()
+	os.Chdir("../")
+}
+
+// Testing the dir for deb file existence.
+func TestCheckDeb(t *testing.T) {
+	os.Chdir("../test_data/deb/")
+	debs, err := CheckDeb()
+	if err != nil {
+		t.Errorf("CheckDeb() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
+	}
+	if len(debs) != 1 {
+		t.Errorf("CheckDeb() failed test. deb file length mismatch.")
+	}
+	os.Chdir("../")
+}
+
+// Testing the dir for deb file existence with a path name.
+func TestCheckDebWithPath(t *testing.T) {
+	os.Chdir("../test_data")
+	debs, err := CheckDebWithPath("deb")
+	if err != nil {
+		t.Errorf("CheckDebWithPath() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
+	}
+	if len(debs) != 1 {
+		t.Errorf("CheckDebWithPath() failed test. deb file length mismatch.")
+	}
+	os.Chdir("../")
 }
 
 func tearDown() {
