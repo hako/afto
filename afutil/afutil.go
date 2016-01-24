@@ -3,6 +3,7 @@ package afutil
 
 import (
 	"errors"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -13,6 +14,11 @@ import (
 
 	"github.com/hako/afto/deb"
 	"github.com/hako/afto/release"
+)
+
+var (
+	debFilesNotFound = "No .deb file(s) found. Unable to continue."
+	debFileNotFound  = " not found. Unable to continue."
 )
 
 // ParseDir checks to see if a directory has the required files for a cydia repo.
@@ -46,7 +52,7 @@ func ParseDir(indir string) (bool, error) {
 func CheckDPKG() error {
 	_, err := exec.LookPath("dpkg")
 	if err != nil {
-		return errors.New("unable to find required command 'dpkg'")
+		return errors.New("Unable to find required command 'dpkg'")
 	}
 	return nil
 }
@@ -55,7 +61,7 @@ func CheckDPKG() error {
 func CheckBzip2() error {
 	_, err := exec.LookPath("bzip2")
 	if err != nil {
-		return errors.New("unable to find required command 'bzip2'")
+		return errors.New("Unable to find required command 'bzip2'")
 	}
 	return nil
 }
@@ -78,7 +84,7 @@ func GetRepo(dir string) (string, error) {
 	return finalPath, nil
 }
 
-// ParseDeb parses a deb file and returns a *Format.
+// ParseDeb parses a deb file and returns a *deb.Control struct.
 func ParseDeb(debName string) (*deb.Control, error) {
 	// Run dpkg --field *.deb
 	fields, parseerr := exec.Command("dpkg", "-f", debName).Output()
@@ -125,7 +131,7 @@ func CheckDeb() ([]string, error) {
 	}
 	// Return error if ultimately no deb files are found.
 	if len(deb) == 0 {
-		return nil, errors.New("No .deb file(s) found. Unable to continue.")
+		return nil, errors.New(debFilesNotFound)
 	}
 	return deb, nil
 }
@@ -145,9 +151,23 @@ func CheckDebWithPath(path string) ([]string, error) {
 	}
 	// Return error if ultimately no deb files are found.
 	if len(deb) == 0 {
-		return nil, errors.New("No .deb file(s) found. Unable to continue.")
+		return nil, errors.New(debFilesNotFound)
 	}
 	return deb, nil
+}
+
+// CheckDebWithFile is like CheckDeb but a filepath is required.
+func CheckDebWithFile(fp string) (string, error) {
+	path, fperr := filepath.Abs(fp)
+	if fperr != nil {
+		return "", errors.New("\"" + fp + "\"" + debFileNotFound)
+	}
+
+	// Return error if the deb does not exist.
+	if IsDeb(path) != true {
+		return "", errors.New("\"" + fp + "\"" + debFileNotFound)
+	}
+	return path, nil
 }
 
 // IsDeb returns whether the string is a deb file with regex.
@@ -178,6 +198,27 @@ func ReleaseFile(origin string, label string, desc string, codename string, suit
 
 	r.AddPackageSignature(packages, packagesbz)
 	return r.Generate(), nil
+}
+
+// Copy copies a file from source to destination.
+// Note: Copy is not in the stdlib so kudos to @elazarl
+func Copy(source string, destination string) error {
+	src, ferr := os.Open(source)
+	if ferr != nil {
+		return ferr
+	}
+
+	defer src.Close()
+	dst, derr := os.Create(destination)
+	if derr != nil {
+		return derr
+	}
+
+	if _, err := io.Copy(dst, src); err != nil {
+		dst.Close()
+		return err
+	}
+	return dst.Close()
 }
 
 // DetectPlatform returns what host system the user is running.
