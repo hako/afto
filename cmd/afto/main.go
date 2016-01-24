@@ -18,7 +18,7 @@ import (
 
 var (
 	port     = "2468"
-	version  = "0.1"
+	version  = "0.2"
 	repoPath = ""
 	file     = ""
 
