@@ -5,7 +5,7 @@ _/αυτο/_
 [![Build Status](https://travis-ci.org/hako/afto.svg)](https://travis-ci.org/hako/afto)
 ![](http://goreportcard.com/badge/hako/afto)
 ![](http://img.shields.io/status/alpha.png?color=yellow)
-![](https://img.shields.io/badge/version-0.1-yellow.png)
+![](https://img.shields.io/badge/version-0.2-yellow.png)
 
 afto is an automated command-line cydia repo generator/builder and hoster for Cydia tweak developers.
 
