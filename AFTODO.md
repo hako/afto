@@ -34,6 +34,7 @@
 
 * [ ] **impl**: add a file watcher.
 * [ ] **impl**: basic server. (Not file server)
+* [ ] **impl**: implement optional Release file signing `afto -s <repo>` -> Release.gpg
 * [ ] **impl**: draft and generate docs (manpage/markdown/etc.)
 * [ ] **impl**: afto should walk over generated repo. (./afto)
 
