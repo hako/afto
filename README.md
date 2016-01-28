@@ -1,6 +1,9 @@
+![](logo.png)
+
 # afto [alpha]
 
 _/αυτο/_
+
 
 [![Build Status](https://travis-ci.org/hako/afto.svg)](https://travis-ci.org/hako/afto)
 ![](http://goreportcard.com/badge/hako/afto)
