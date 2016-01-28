@@ -49,7 +49,7 @@ Make sure you run `make scrutinise` so that your changes do not cause [go lint](
 ### special thanks:
 [@saurik](http://twitter.com/saurik)
 
-[@return](https://github.com/retrun)
+[@return](https://github.com/return)
 
 [you???](https://github.com/hako/afto#contributing)
 
