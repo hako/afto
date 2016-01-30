@@ -53,8 +53,15 @@ Make sure you run `make scrutinise` so that your changes do not cause [go lint](
 
 [you???](https://github.com/hako/afto#contributing)
 
+[Haiku Project](https://haiku-os.org)
+
+(_The original package icon used at the top_)
+
 ### license
 
 MIT
 
+
+
 _The name 'afto' comes from the word 'automatic' in greek._
+
