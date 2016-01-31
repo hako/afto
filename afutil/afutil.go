@@ -170,6 +170,11 @@ func CheckDebWithFile(fp string) (string, error) {
 	return path, nil
 }
 
+// SignRepo signs the repo's Packages and Packages.bz
+func SignRepo(fp string) {
+
+}
+
 // IsDeb returns whether the string is a deb file with regex.
 func IsDeb(filename string) bool {
 	re := regexp.MustCompile(`(\.deb)`)
