@@ -84,7 +84,7 @@ func main() {
 	log.SetPrefix("afto: ")
 	log.SetFlags(2)
 
-	if (opts["-d"] != true && opts["--dir"] != true) && opts["new"] != true && opts["update"] != true {
+	if (opts["-d"] != true && opts["--dir"] != true) && opts["new"] != true && opts["update"] != true && opts["-s"] != true && opts["--sign"] != true {
 		fmt.Println("afto: -d or --dir is required")
 		os.Exit(1)
 	}
@@ -99,7 +99,19 @@ func main() {
 		file = optsfile
 	}
 
-	// New command function.
+	// Afto -s option.
+	if opts["-s"] == true || opts["--sign"] == true {
+		repo := opts["<dir>"].(string)
+		log.Println("signing repo \"" + repo + "\"")
+		err := afutil.SignRepo(repo)
+		if err != nil {
+			log.Fatalln(err.Error())
+		}
+		log.Println("repo successfully signed!")
+		os.Exit(0)
+	}
+
+	// Afto new command.
 	if opts["new"] == true {
 		name := opts["<name>"].(string)
 		af := &AftoRepo{Name: name, Cmd: "new"}
@@ -107,7 +119,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	// Afto update command
+	// Afto update command.
 	if opts["update"] == true {
 		var af *AftoRepo
 		name := opts["<name>"].(string)
@@ -125,7 +137,7 @@ func main() {
 
 	finalPath, gtderr := afutil.GetRepo(dir)
 	if gtderr != nil {
-		log.Fatalln("afto: " + gtderr.Error())
+		log.Fatalln(gtderr.Error())
 		os.Exit(1)
 	}
 
