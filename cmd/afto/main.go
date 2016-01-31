@@ -53,6 +53,7 @@ Usage:
   afto update -r <name> [-f <file> | --file <file>] 
   afto [-d <dir> | --dir <dir>] [-p <port> | --port <port>]
   afto [-c <file> | --control <file>]
+  afto [-s <dir> | --sign <dir>]
 
 options:
   -c, --control  Specify control file to use.
