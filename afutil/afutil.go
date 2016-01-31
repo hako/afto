@@ -170,9 +170,17 @@ func CheckDebWithFile(fp string) (string, error) {
 	return path, nil
 }
 
-// SignRepo signs the repo's Packages and Packages.bz
+// SignRepo signs the repo's Packages and Packages.bz2 using GPG
 func SignRepo(fp string) {
-
+	path, fperr := ParseDir(fp)
+	packagesCheck, err := ioutil.ReadFile("Release")
+	if err != nil {
+		return "", err
+	}
+	_, gpgerr := exec.Command("gpg", "-abs", "-o", "Release.gpg", path+"\"Release").Output()
+	if gpgerr != nil {
+		return gpgerr
+	}
 }
 
 // IsDeb returns whether the string is a deb file with regex.
