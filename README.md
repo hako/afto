@@ -44,7 +44,7 @@ If you would like to fix a bug, add a feature or provide feedback you can do so 
 You can run afto tests by using `make test`
 and make afto builds by doing `make build`
 
-Make sure you run `make scrutinise` so that your changes do not cause [go lint](https://github.com/golang/lint) and [go vet](https://golang.org/cmd/vet/) to scream errors at you.
+Make sure you run `make test ; make scrutinise` so that your changes do not cause [go lint](https://github.com/golang/lint) and [go vet](https://golang.org/cmd/vet/) to scream errors at you.
 
 ### special thanks:
 [@saurik](http://twitter.com/saurik)
