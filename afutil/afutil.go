@@ -100,7 +100,7 @@ func ParseDeb(debName string) (*deb.Control, error) {
 	return controlFile, nil
 }
 
-// BzipPackages compresses the 'Packages' file Pacakges.bz2.
+// BzipPackages compresses the 'Packages' file Packages.bz2.
 // Note: The stlib package "compress/bzip2" does not support compression.
 func BzipPackages() error {
 	// Run bzip2 -kf Packages.
