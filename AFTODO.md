@@ -16,6 +16,7 @@
 **cont**
 
 + golint, go test, go vet and gocyclo everytime.
++ increase code coverage.
 
 **v.0.1 | 10/01/16 - 24/01/16**:
 
@@ -30,11 +31,10 @@
 * [x] **impl**: provide basic control file parser.
 * [x] **note**: It should check for dpkg-scanpackages.
 
-**v.0.2 24/01/16-**:
+**v.0.2 | 24/01/16 -**:
 
 * [ ] **impl**: add a file watcher.
 * [ ] **impl**: basic server. (Not file server)
 * [ ] **impl**: implement optional Release file signing `afto -s <repo>` -> Release.gpg
 * [ ] **impl**: draft and generate docs (manpage/markdown/etc.)
 * [ ] **impl**: afto should walk over generated repo. (./afto)
-
