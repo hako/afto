@@ -12,9 +12,11 @@ _/αυτο/_
 
 afto is an automated command-line cydia repo generator/builder and hoster for Cydia tweak developers.
 
+_The name 'afto' comes from the word 'automatic' in greek._
+
 ### features
-+ automatic Cydia repo generation.
-+ automatic Cydia repo updating.
++ Automatic Cydia repo generation.
++ Automatic Cydia repo updating.
 + Cydia repo server testing.
 + Many more.
 
@@ -32,6 +34,24 @@ Single binaries will be provided in the near future.
 The only thing you need on your system is:
 
 `dpkg`
+
+### usage
+```Usage:
+  afto new <name> 
+  afto update -r <name> [-f <file> | --file <file>] 
+  afto [-d <dir> | --dir <dir>] [-p <port> | --port <port>]
+  afto [-c <file> | --control <file>]
+  afto [-s <dir> | --sign <dir>]
+
+options:
+  -c, --control  Specify control file to use.
+  -p, --port     Specify port number for afto.
+  -h, --help     Show this screen.
+  --version      Show version.
+
+commands:
+  new             Generate a new cydia repo.
+```
 
 ### roadmap
 see [AFTODO.md](AFTODO.md)
@@ -60,8 +80,3 @@ Make sure you run `make test ; make scrutinise` so that your changes do not caus
 ### license
 
 MIT
-
-
-
-_The name 'afto' comes from the word 'automatic' in greek._
-
