@@ -35,6 +35,8 @@ The only thing you need on your system is:
 
 `dpkg`
 
+You also need at least 1 or more `.deb` files. So that you can test or host your repo.
+
 ### usage
 ```Usage:
   afto new <name> 
