@@ -22,13 +22,12 @@ _The name 'afto' comes from the word 'automatic' in greek._
 
 ### install
 
-If you have Go installed you can install the project by using:
-`go get github.com/hako/afto`
-
-And you can install `afto` by using:
+If you have Go installed you can install `afto` by typing:
 `go get github.com/hako/afto/cmd/afto`
 
-Single binaries will be provided in the near future.
+This will install the project source code and the `afto` binary.
+
+Single release binaries will be provided in the near future.
 
 ### requirements:
 The only thing you need on your system is:
