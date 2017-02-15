@@ -34,9 +34,9 @@ func TestNonExistence(t *testing.T) {
 
 // Testing if the host user has the dpkg command.
 func TestDpkgCommandExists(t *testing.T) {
-	err := CheckDPKG()
+	err := CheckDpkg()
 	if err != nil {
-		t.Errorf("CheckDPKG() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
+		t.Errorf("CheckDpkg() failed test. \n\n\rWant: \n\r\"%v\" \n\rGot: \n\r\"%v\" \n\n", nil, err)
 	}
 }
 

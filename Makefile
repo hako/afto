@@ -10,7 +10,7 @@
 build:
 	rm -rf bin
 	mkdir bin
-	go build  -v -o afto cmd/afto/main.go cmd/afto/scripts.go
+	go build  -ldflags "-X main.version=`cat VERSION` -X 'main.buildDate=`date -u '+%Y-%m-%d_%H:%M:%S'`' -X main.buildHash=`git rev-parse HEAD` -X main.debug=false" -v -o afto cmd/afto/main.go cmd/afto/scripts.go
 	mv afto bin
 
 test:

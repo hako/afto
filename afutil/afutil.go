@@ -17,8 +17,8 @@ import (
 )
 
 var (
-	debFilesNotFound = "No .deb file(s) found. Unable to continue."
-	debFileNotFound  = " not found. Unable to continue."
+	debFilesNotFound = "no .deb file(s) found. unable to continue"
+	debFileNotFound  = " not found. unable to continue"
 )
 
 // ParseDir checks to see if a directory has the required files for a cydia repo.
@@ -48,8 +48,8 @@ func ParseDir(indir string) (bool, error) {
 	return valid, nil
 }
 
-// CheckDPKG checks the host system has the dpkg command installed.
-func CheckDPKG() error {
+// CheckDpkg checks the host system has the dpkg command installed.
+func CheckDpkg() error {
 	_, err := exec.LookPath("dpkg")
 	if err != nil {
 		return errors.New("Unable to find required command 'dpkg'")
@@ -251,6 +251,6 @@ func DetectPlatform() (string, error) {
 	case "windows":
 		return "It looks like dpkg is not available on Windows. \nYou can stil use afto, you cannot build your repo without dpkg.", nil
 	default:
-		return "", errors.New("Unable to detect your OS.")
+		return "", errors.New("unable to detect your os")
 	}
 }

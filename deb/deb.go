@@ -276,7 +276,7 @@ func (p *Packages) SHA256() string {
 func (c *Control) ParseString(f string) (*Control, error) {
 	parseMap := parse(f)
 	if len(parseMap) == 0 {
-		return nil, errors.New("Unable to parse control file.")
+		return nil, errors.New("unable to parse control file")
 	}
 
 	if _, exists := parseMap["Homepage"]; exists != true {
@@ -315,7 +315,7 @@ func (c *Control) ParseString(f string) (*Control, error) {
 func (p *Packages) ParseString(f string) (*Packages, error) {
 	parseMap := parse(f)
 	if len(parseMap) == 0 {
-		return nil, errors.New("Unable to parse Packages file.")
+		return nil, errors.New("unable to parse Packages file")
 	}
 
 	if _, exists := parseMap["Homepage"]; exists != true {
