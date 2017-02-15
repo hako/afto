@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	version   string
+	version   string = "0.2"
 	buildDate string
-	buildHash string
+	buildHash string = "0"
 
 	port     = "2468"
 	repoPath = ""
@@ -48,7 +48,7 @@ var footer = `
 </html>
 `
 
-var usage = `afto ` + version + ` (` + buildHash[0:8] + `)
+var usage = `afto ` + version + ` (` + buildHash + `)
 built on: ` + buildDate + `
 
 Usage:
