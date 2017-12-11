@@ -10,7 +10,7 @@ _/αυτο/_
 ![](http://img.shields.io/status/alpha.png?color=yellow)
 ![](https://img.shields.io/badge/version-0.2-yellow.png)
 
-afto is an automated command-line cydia repo generator/builder and hoster for Cydia tweak developers.
+afto is an automated command-line cydia repo generator/builder and server for Cydia tweak developers.
 
 _The name 'afto' comes from the word 'automatic' in greek._
 
