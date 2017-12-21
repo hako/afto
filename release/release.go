@@ -41,7 +41,7 @@ func (r Release) Origin() string {
 	return r.origin
 }
 
-// Label returns the respository and section of the packages.
+// Label returns the repository and section of the packages.
 func (r Release) Label() string {
 	return r.label
 }
@@ -81,7 +81,7 @@ func (r *Release) SetOrigin(origin string) {
 	r.origin = origin
 }
 
-// SetLabel sets the respository and section of the packages.
+// SetLabel sets the repository and section of the packages.
 func (r *Release) SetLabel(label string) {
 	r.label = label
 }
