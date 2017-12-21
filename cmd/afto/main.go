@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 	"os/exec"
-	"io/ioutil"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -89,13 +89,13 @@ func main() {
 	opts, _ := docopt.Parse(usage, nil, true, "afto "+version+" ("+buildHash+")", false)
 	log.SetPrefix("afto: ")
 	log.SetFlags(2)
-		
+
 	// Afto -p option (port for afto server to run on).
 	if opts["-p"] == true || opts["--port"] == true {
 		argport := opts["<port>"].(string)
 		port = argport
 	}
-	
+
 	// Afto -f option (for loading the input file using the *.deb file).
 	if opts["-f"] == true || opts["--file"] == true {
 		optsfile := opts["<file>"].(string)
@@ -135,7 +135,7 @@ func main() {
 		af.updateRepo()
 		os.Exit(0)
 	}
-	
+
 	// Afto serve command.
 	if opts["serve"] == true {
 		// Parse the directory and fetch the final path to serve the repo.
@@ -146,23 +146,23 @@ func main() {
 			log.Fatalln(err.Error())
 			os.Exit(1)
 		}
-		
+
 		repoPath = finalPath
-		
+
 		// afto watches, listens and takes action. (afto listens on 0.0.0.0:[port])
 		c := color.New(color.FgCyan).Add(color.Bold)
 		c.Println("afto (αυτο) v" + version + " - the cydia repo generator/manager.")
 		color.Cyan("(c) 2017 Wesley Hill (@hako/@hakobyte)")
 		fmt.Println("afto is watching & listening for connections on port " + port)
-		
+
 		// Add middleware.
 		mx := http.FileServer(http.Dir(repoPath))
 		loggingHandler := handlers.LoggingHandler(os.Stdout, mx)
-		
+
 		// Afto -w option (for watching the chosen directory).
 		if opts["-w"] == true || opts["--watch"] == true {
 			log.Println("watching the " + filepath.Base(repoPath) + " folder.")
-			
+
 			// Spin up a goroutine for the file watcher.
 			go func() {
 				n := make(chan notify.EventInfo, 1)
@@ -170,12 +170,13 @@ func main() {
 				notify.Watch(repoPath, n, notify.Rename)
 				defer notify.Stop(n)
 				for {
-					ev := <-n; ev.Event()
+					ev := <-n
+					ev.Event()
 					regenerateRepo(repoPath)
 				}
 			}()
 		}
-		
+
 		// Spin up a goroutine for the repo server.
 		go func() {
 			err := http.ListenAndServe(":"+port, loggingHandler)
@@ -184,7 +185,7 @@ func main() {
 				os.Exit(1)
 			}
 		}()
-		
+
 		select {}
 	}
 }
@@ -367,7 +368,7 @@ func regenerateRepo(path string) {
 	log.Println("regenerating repo...")
 	color.Unset()
 	// Delete and recreate repo.
-	files, _ := 	ioutil.ReadDir(path)
+	files, _ := ioutil.ReadDir(path)
 	for _, f := range files {
 		if filepath.Ext(f.Name()) != ".deb" {
 			os.Remove(path + "/" + f.Name())
