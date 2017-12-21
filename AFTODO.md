@@ -7,11 +7,9 @@
 
 **impl**: implement a feature.
 
-**cont**: continously do.
+**cont**: continuously do.
 
 **note**: a note to self.
-
---
 
 **cont**
 
@@ -33,8 +31,12 @@
 
 **v.0.2 | 24/01/16 -**:
 
-* [ ] **impl**: add a file watcher.
-* [ ] **impl**: basic server. (Not file server)
+* [x] **impl**: add a file watcher.
+* [x] **impl**: basic server. (Not file server)
+* [x] **impl**: regenerate the cydia repo.
 * [x] **impl**: implement optional Release file signing `afto -s <repo>` -> Release.gpg
 * [ ] **impl**: draft and generate docs (manpage/markdown/etc.)
 * [ ] **impl**: afto should walk over generated repo. (./afto)
+
+**v.0.3**:
+* [ ] **impl**: improve documentation.
