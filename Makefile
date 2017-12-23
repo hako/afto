@@ -28,8 +28,8 @@ scrutinise:
 
 scrutinise-verbose: test-coverage scrutinise
 
-# install md2man (gem install md2man)
-doc: md2man-roff docs/afto.md > docs/afto.1
+doc:
+	./build_docs.sh
 
 clean:
 	rm -rf bin
