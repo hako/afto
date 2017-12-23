@@ -1,0 +1,82 @@
+.TH AFTO 1 "2017" UNIX "AFTO Manual"
+.SH NAME
+.PP
+\fB\fCafto\fR \- An automated command\-line cydia repo generator/builder and server.
+.SH SYNOPSIS
+.PP
+\fB\fCafto\fR \fB\fC\-\-version\fR
+.PP
+\fB\fCafto\fR command [\fB\fCoptions\fR]
+.PP
+\fB\fCafto\fR \fB\fC\-h\fR | \fB\fC\-\-help\fR
+.SH DESCRIPTION
+.PP
+\fB\fCafto\fR is an automated command\-line cydia repo generator/builder and server for Cydia tweak developers.
+.PP
+\fIThe name 'afto' comes from the word 'automatic' in greek.\fP
+.RS
+.IP \(bu 2
+Automatic Cydia repo generation.
+.IP \(bu 2
+Automatic Cydia repo updating.
+.IP \(bu 2
+Cydia repo server testing.
+.IP \(bu 2
+Many more.
+.RE
+.PP
+The only thing you need on your system is:
+.PP
+\fB\fCdpkg\fR
+.PP
+\fIYou also need at least 1 or more .deb files. So that you can test or host your repo.\fP
+.SH USAGE
+.PP
+To generate a new Cydia repo, use the following command replacing 'example_repo' with your desired repo name:
+.PP
+\fB\fCafto new example_repo\fR
+.PP
+To serve your new Cydia repo, use the following command replacing 'example_repo' with your desired repo name:
+.PP
+\fB\fCafto serve example_repo\fR
+.PP
+If you choose to add another .deb file to your repo, you can instruct \fB\fCafto\fR to automatically regenerate your repo with the \fB\fC\-w\fR option.
+.PP
+\fB\fCafto serve \-w example_repo\fR
+.PP
+You can visit \fB\fChttp://127.0.0.1:2468\fR to view your newly generated repo, and you can also put this in Cydia to view this in the Cydia iOS app.
+.SH COMMANDS
+.PP
+\fB\fCnew\fR: New repository. (Use "." for the same directory)
+.PP
+\fB\fCserve\fR: Serve the directory and optionally watch the repo with \fB\fC\-w\fR\&.
+.PP
+\fB\fCupdate\fR: Update the deb file in the repo with \fB\fC\-r\fR\&.
+.SH OPTIONS
+.TP
+\fB\fC\-f\fR | \fB\fC\-\-file\fR
+A file normally a *.deb file.
+.TP
+\fB\fC\-w\fR | \fB\fC\-\-watch\fR
+Watch the repo.
+.TP
+\fB\fC\-s\fR | \fB\fC\-\-sign\fR
+Sign the repo.
+.TP
+\fB\fC\-c\fR | \fB\fC\-\-control\fR 
+Specify control file to use.
+.TP
+\fB\fC\-p\fR | \fB\fC\-\-port\fR 
+Specify port number for \fB\fCafto\fR\&.
+.TP
+\fB\fC\-\-h\fR | \fB\fC\-\-help\fR
+Help menu.
+.TP
+\fB\fC\-\-version\fR
+Show version.
+.SH BUGS
+.PP
+If you find any bugs please file an issue on GitHub or contact me. See the \fB\fCAUTHOR\fR section.
+.SH AUTHOR
+.PP
+Wesley Hill \[la]wesley@hakobaito.co.uk\[ra]

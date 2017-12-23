@@ -77,6 +77,8 @@ or
 afto serve -w . # Serve the Cydia repo and watch for changes.
 ```
 
+You can visit http://127.0.0.1:2468 to view your newly generated repo, and  you  can also put this in Cydia to view this in the Cydia iOS app.
+
 ### roadmap
 see [AFTODO.md](AFTODO.md)
 
